@@ -84,6 +84,8 @@ func main() {
 			for i := 0; i < len(lineSlice[x]); i++ {
 				if string(lineSlice[x][i]) == "i" && string(lineSlice[x][i+1]) == "f" {
 					newVarMapInt, newVarMapReal, newVarMapStr, x = ifProcess(newVarMapInt, newVarMapReal, newVarMapStr, lineSlice, x)
+
+					break
 				} else if string(lineSlice[x][i]) == "f" && string(lineSlice[x][i+1]) == "o" && string(lineSlice[x][i+2]) == "r" {
 					forProcess()
 				} else if string(lineSlice[x][i]) == "w" {
@@ -1101,6 +1103,8 @@ func readLines(lineSlice []string, newVarMapInt map[string]string, newVarMapReal
 			for i := 0; i < len(lineSlice[z]); i++ {
 				if string(lineSlice[z][i]) == "i" && string(lineSlice[z][i+1]) == "f" {
 					newVarMapInt, newVarMapReal, newVarMapStr, z = ifProcess(newVarMapInt, newVarMapReal, newVarMapStr, lineSlice, z)
+
+					break
 				} else if string(lineSlice[z][i]) == "f" && string(lineSlice[z][i+1]) == "o" && string(lineSlice[z][i+2]) == "r" {
 					forProcess()
 				} else if string(lineSlice[z][i]) == "w" && string(lineSlice[z][i+1]) == "r" && string(lineSlice[z][i+2]) == "i" && string(lineSlice[z][i+3]) == "t" && string(lineSlice[z][i+4]) == "e" && string(lineSlice[z][i+5]) == "l" && string(lineSlice[z][i+6]) == "n" {

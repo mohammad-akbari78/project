@@ -3,11 +3,16 @@ var
     y:integer;
 begin
 
- x:=4;
- y:=x+9;
+ x:=5;
+ y:=8;
 
-if (y>=15) then
+if (y>5) then
 begin
- writeln("hello");
+y:=3;
+if (x>=y) then
+begin
+ writeln("answer =");
+ writeln(x);
+end;
 end;
 end.
