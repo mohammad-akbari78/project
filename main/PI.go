@@ -87,7 +87,7 @@ func main() {
 
 					break
 				} else if string(lineSlice[x][i]) == "f" && string(lineSlice[x][i+1]) == "o" && string(lineSlice[x][i+2]) == "r" {
-					forProcess()
+					newVarMapInt, newVarMapReal, newVarMapStr, x = forProcess(newVarMapInt, newVarMapReal, newVarMapStr, lineSlice, x)
 				} else if string(lineSlice[x][i]) == "w" {
 					if string(lineSlice[x][i+1]) == "r" {
 						if string(lineSlice[x][i+2]) == "i" {
@@ -550,8 +550,102 @@ func ifProcess(newVarMapInt map[string]string, newVarMapReal map[string]string, 
 
 	return newVarMapInt, newVarMapReal, newVarMapStr, newRow
 }
-func forProcess() {
+func forProcess(newVarMapInt map[string]string, newVarMapReal map[string]string, newVarMapStr map[string]string, lineSlice []string, x int) (map[string]string, map[string]string, map[string]string, int) {
+	var indexOfTo, indexOfDo, indexOfSign int
+	var varDefExpr, limExpr, varName, valueOfVariable string
 
+	lineSlice[x] = strings.Trim(lineSlice[x], " ")
+	lineSlice[x] = strings.Trim(lineSlice[x], "\r")
+
+	if string(lineSlice[x][0]) != "f" || string(lineSlice[x][1]) != "o" || string(lineSlice[x][2]) != "r" {
+		fmt.Println(" !!! for loop implementation is not correct !!!")
+
+		os.Exit(0)
+	}
+
+	for i := 3; i < len(lineSlice[x]); i++ {
+		if string(lineSlice[x][i]) == "t" && string(lineSlice[x][i+1]) == "o" {
+			indexOfTo = i
+		}
+		if string(lineSlice[x][i]) == "d" && string(lineSlice[x][i+1]) == "o" {
+			indexOfDo = i
+		}
+	}
+	for j := 3; j < indexOfTo; j++ {
+		varDefExpr += string(lineSlice[x][j])
+	}
+	for k := indexOfTo + 2; k < indexOfDo; k++ {
+		limExpr += string(lineSlice[x][k])
+	}
+	varDefExpr = strings.Trim(varDefExpr, " ")
+	limExpr = strings.Trim(limExpr, " ")
+
+	for u := 0; u < len(varDefExpr); u++ {
+		if string(varDefExpr[u]) == ":" && string(varDefExpr[u+1]) == "=" {
+			indexOfSign = u
+		}
+	}
+	for s := 0; s < indexOfSign; s++ {
+		varName += string(varDefExpr[s])
+	}
+	for a := indexOfSign + 2; a < len(varDefExpr); a++ {
+		valueOfVariable += string(varDefExpr[a])
+	}
+	valueOfVariable = strings.Trim(valueOfVariable, " ")
+	varName = strings.Trim(varName, " ")
+
+	isDef := false
+	for index := range newVarMapInt {
+		if index == varName {
+			newVarMapInt[varName] = valueOfVariable
+			isDef = true
+		}
+	}
+	if !isDef {
+		fmt.Printf("%v is not define ", varName)
+
+		os.Exit(0)
+	}
+	isStr := false
+	for p := range limExpr {
+		if p != 48 && p != 49 && p != 50 && p != 51 && p != 52 && p != 53 && p != 54 && p != 55 && p != 56 && p != 57 {
+			isStr = true
+
+			break
+		}
+	}
+	if isStr {
+		for index, value := range newVarMapInt {
+			if index == limExpr {
+				limExpr = value
+			}
+		}
+	}
+	if !isStr {
+		fmt.Printf("%v is not exist ", limExpr)
+
+		os.Exit(0)
+	}
+	startValue, cErr := strconv.Atoi(valueOfVariable)
+	if cErr != nil {
+		fmt.Println("can't convert string to int , line", x+1)
+
+		os.Exit(0)
+	}
+	endValue, coErr := strconv.Atoi(limExpr)
+	if coErr != nil {
+		fmt.Println("can't convert string to int , line", x+1)
+
+		os.Exit(0)
+	}
+	for t := startValue; t < endValue-1; t++ {
+		readLines(lineSlice, newVarMapInt, newVarMapReal, newVarMapStr, x)
+		newVarMapInt[varName] = strconv.Itoa(t + 1)
+
+	}
+	x, newVarMapInt, newVarMapReal, newVarMapStr = readLines(lineSlice, newVarMapInt, newVarMapReal, newVarMapStr, x)
+
+	return newVarMapInt, newVarMapReal, newVarMapStr, x
 }
 func writelnProcess(newVarMapInt map[string]string, newVarMapReal map[string]string, newVarMapStr map[string]string, lineSlice []string, x int) {
 	var firstParentheses, lastParentheses, fQuote, lQuote int
@@ -1096,7 +1190,7 @@ func readLines(lineSlice []string, newVarMapInt map[string]string, newVarMapReal
 		if lineSlice[z] == "begin" || lineSlice[z] == "" {
 
 			continue
-		} else if lineSlice[z] == "end" {
+		} else if lineSlice[z] == "end;" {
 
 			return z, newVarMapInt, newVarMapReal, newVarMapStr
 		} else {
@@ -1106,7 +1200,7 @@ func readLines(lineSlice []string, newVarMapInt map[string]string, newVarMapReal
 
 					break
 				} else if string(lineSlice[z][i]) == "f" && string(lineSlice[z][i+1]) == "o" && string(lineSlice[z][i+2]) == "r" {
-					forProcess()
+					newVarMapInt, newVarMapReal, newVarMapStr, z = forProcess(newVarMapInt, newVarMapReal, newVarMapStr, lineSlice, z)
 				} else if string(lineSlice[z][i]) == "w" && string(lineSlice[z][i+1]) == "r" && string(lineSlice[z][i+2]) == "i" && string(lineSlice[z][i+3]) == "t" && string(lineSlice[z][i+4]) == "e" && string(lineSlice[z][i+5]) == "l" && string(lineSlice[z][i+6]) == "n" {
 					writelnProcess(newVarMapInt, newVarMapReal, newVarMapStr, lineSlice, z)
 

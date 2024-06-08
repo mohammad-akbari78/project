@@ -3,16 +3,12 @@ var
     y:integer;
 begin
 
- x:=5;
  y:=8;
-
-if (y>5) then
+for x:=1 to 8 do
 begin
-y:=3;
-if (x>=y) then
+for y:=1 to x do
 begin
- writeln("answer =");
- writeln(x);
-end;
-end;
+    writeln(x);
+   end;
+   end;
 end.
